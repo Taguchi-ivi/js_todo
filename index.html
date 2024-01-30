@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- css import  -->
+  <link rel="stylesheet" href="src/css/reset.css">
+  <link rel="stylesheet" href="src/css/index.css">
+  <title>Todo List for Vanilla js</title>
+</head>
+<body>
+  <div class="container">
+    <div class="card-title">
+      <h1 class="title">Todo List 🚀</h1>
+      <p class="sub-title">output vanilla js todo list</p>
+      <div class="wrapper-input">
+        <input class="input-text" type="text">
+        <button class="btn">保存</button>
+      </div>
+    </div>
+    <div class="card-item">
+      <p class="card-item-header">
+        タスク数: <span>0</span> / 未着手数: <span>0</span> / 完了数: <span>0</span>
+      </p>
+      <ul>
+        <li class="card-item-wrapper">
+          <input type="checkbox" class="card-item-checkbox" name="checkbox01" checked="checked">
+          <p class="card-item-p">テストテストテストテストテスト</p>
+          <div class="card-item-btns">
+            <button class="edit">編集</button><button class="del">削除</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <script src="./src/js/index.js"></script>
+</body>
+</html>
