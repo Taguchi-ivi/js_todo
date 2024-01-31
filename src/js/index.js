@@ -8,8 +8,7 @@ const submit = document.getElementById('submit');
 const taskCount = document.getElementById('task-count');
 const taskNotStartCount = document.getElementById('task-not-start-count');
 const taskCompCount = document.getElementById('task-comp-count');
-// const taskCheckBox = document.getElementById('checkbox');
-const allTaskCheckBox = document.querySelectorAll('input[name="task-checkbox"]')
+const taskCheckBox = document.getElementById('checkbox');
 let taskContent = document.getElementById('card-item-content')
 let counter = {
   all: 0,
@@ -48,31 +47,37 @@ const addTask = (event) => {
   }
 }
 
-// allTaskCheckBox.forEach((checkBox) => {
-//   checkBox.addEventListener('change', (event) => {
-//     if (event.target.checked) {
-//       counter.notStart -= 1;
-//       counter.comp += 1;
-//       taskNotStartCount.textContent = counter.notStart;
-//       taskCompCount.textContent = counter.comp;
-//     } else {
-//       counter.notStart += 1;
-//       counter.comp -= 1;
-//       taskNotStartCount.textContent = counter.notStart;
-//       taskCompCount.textContent = counter.comp;
-//     }
-//   })
-// })
+const changeCheckBox = (event) => {
+  const target = event.target;
+  if (target.matches('.card-item-checkbox')) {
+    // チェックボックスがクリックされた場合の処理
+    const parentElement = target.parentElement;
+    const childElement = parentElement.children[1];
+    const className = childElement.className;
+    let disabled;
+    if (target.checked) {
+      counter.notStart -= 1;
+      counter.comp += 1;
+      childElement.classList.add('cancellation');
+      disabled = true;
+    } else {
+      counter.notStart += 1;
+      counter.comp -= 1;
+      childElement.classList.remove('cancellation');
+      disabled = false;
+    }
 
-// const changeCheckBox = (event) => {
-//   event.preventDefault();
-//   console.log('check');
+    taskNotStartCount.textContent = counter.notStart;
+    taskCompCount.textContent = counter.comp;
 
-// }
+    const childEditBtn = parentElement.children[2].children[0];
+    childEditBtn.disabled = disabled;
+  }
+}
 
 
 let todoList = [];
 submit.addEventListener('click', addTask);
+document.addEventListener('change', changeCheckBox);
 
-// taskCheckBox.addEventListener('change', changeCheckBox);
 
