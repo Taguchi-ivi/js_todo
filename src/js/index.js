@@ -4,61 +4,74 @@
     single quotes
 */
 
-const taskCount = document.getElementById('task-count');
-const taskNotStartCount = document.getElementById('task-not-start-count');
-const taskCompCount = document.getElementById('task-comp-count');
-let taskContent = document.getElementById('card-item-content')
-let todoList = [];  // status: 0: 未着手, 1: 完了
+// indexをidにするのはNG 削除後の追加などで重複する可能性があるため
+const getRandomId = () => {
+  return Math.floor( Math.random() * 10000 ) ;
+}
+const getLiElement = (task) => {
+  return `
+    <input id="checkbox" type="checkbox" class="card-item-checkbox active" name="task-checkbox">
+    <p class="card-item-p">${task}</p>
+    <div class="card-item-btns">
+      <button class="keep" id="keep">保存</button><button class="edit active" id="edit">編集</button><button class="del" id="del">削除</button>
+    </div>
+    <input type="number" class="card-item-checkbox" name="0">
+    `
+}
+const getTaskArray = () => {
+  return Array.from(document.querySelectorAll('.card-item-wrapper'))
+}
+const getAllCount = () => {
+  return getTaskArray().length;
+}
 
 const getCountByStatus = (status) => {
-  const newArray = todoList.filter((todo) => {
-    return todo.status === status;
+  const taskList = getTaskArray();
+
+  const newArray = taskList.filter((task) => {
+    const statusInput = task.children[3];
+    const getStatus = Number(statusInput.name);
+    return getStatus === status;
   })
   return newArray.length;
 }
 
 const updateStatusById = (id, status) => {
-  return todoList.map((todo) => {
-    if (todo.id === id) {
-      todo.status = status;
+  const taskList = getTaskArray();
+
+  taskList.map((task) => {
+    const taskId = Number(task.id);
+    if (taskId === id) {
+      const statusInput = task.children[3];
+      statusInput.name = String(status);
     }
-    return todo;
   })
 }
 
-const filterById = (id) => {
-  return todoList.filter((todo) => {
-    return todo.id !== id;
-  })
+const countElements = () => {
+  const taskCount = document.getElementById('task-count');
+  const taskNotStartCount = document.getElementById('task-not-start-count');
+  const taskCompCount = document.getElementById('task-comp-count');
+  return [taskCount, taskNotStartCount, taskCompCount]
 }
 
 const addTask = () => {
   const inputValue = document.getElementById('input-todo');
   const task = inputValue.value;
   if (task) {
-    const newTask = {
-      id: todoList.length,
-      content: task,
-      status: 0,
-    }
-    todoList.push(newTask);
 
     // count fix
-    taskCount.textContent = todoList.length;
-    taskNotStartCount.textContent = getCountByStatus(0);
+    const [taskCount, taskNotStartCount, _] = countElements();
+    const count = getAllCount();
+    taskCount.textContent = count + 1;
+    taskNotStartCount.textContent = getCountByStatus(0) + 1;
 
     // task view fix
-    let newTaskContent = document.createElement('li');
+    const newTaskContent = document.createElement('li');
     newTaskContent.setAttribute('class', 'card-item-wrapper');
-    newTaskContent.setAttribute('id', `${newTask.id}`);
-    newTaskContent.innerHTML = `
-    <input id="checkbox" type="checkbox" class="card-item-checkbox active" name="task-checkbox">
-    <p class="card-item-p">${task}</p>
-    <div class="card-item-btns">
-      <button class="keep" id="keep">保存</button><button class="edit active" id="edit">編集</button><button class="del" id="del">削除</button>
-    </div>
-    `;
-    taskContent.appendChild(newTaskContent);
+    newTaskContent.setAttribute('id', String(getRandomId()));
+    newTaskContent.innerHTML = getLiElement(task);
+    document.getElementById('card-item-content').appendChild(newTaskContent);
 
     // task input clear
     inputValue.value = '';
@@ -82,7 +95,8 @@ const changeCheckBox = (target) => {
     status = 0;
   }
 
-  todoList = updateStatusById(id, status);
+  updateStatusById(id, status);
+  const [_, taskNotStartCount, taskCompCount] = countElements();
   taskNotStartCount.textContent = getCountByStatus(0);
   taskCompCount.textContent = getCountByStatus(1);
 
@@ -97,8 +111,6 @@ const keepTask = (target) => {
   const childElementInputText = parentElement.children[1];
   if (childElementInputText.value === '') {
     alert('タスクを入力してください');
-    const beforeValue = todoList[id].content;
-    childElementInputText.value = beforeValue;
     childElementInputText.focus();
     return;
   }
@@ -113,7 +125,6 @@ const keepTask = (target) => {
   const viewPTag = document.createElement('p');
   viewPTag.setAttribute('class', 'card-item-p');
   viewPTag.textContent = childElementInputText.value;
-  todoList[id].content = childElementInputText.value;
 
   childElementInputText.replaceWith(viewPTag);
 }
@@ -144,7 +155,6 @@ const editTaskView = (target) => {
 
 const deleteTask = (target) => {
   const parentElement = target.parentElement.parentElement;
-  const id = Number(parentElement.id);
 
   const checkFlg = window.confirm('削除してもよろしいですか？');
   if (!checkFlg) {
@@ -152,8 +162,8 @@ const deleteTask = (target) => {
   }
   parentElement.remove();
 
-  todoList = filterById(id);
-  taskCount.textContent = todoList.length;
+  const [taskCount, taskNotStartCount, taskCompCount] = countElements();
+  taskCount.textContent = getAllCount();
   taskNotStartCount.textContent = getCountByStatus(0);
   taskCompCount.textContent = getCountByStatus(1);
 }
