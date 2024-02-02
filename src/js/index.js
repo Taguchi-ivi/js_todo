@@ -86,8 +86,36 @@ const changeCheckBox = (target) => {
   taskNotStartCount.textContent = getCountByStatus(0);
   taskCompCount.textContent = getCountByStatus(1);
 
-  const childEditBtn = parentElement.children[2].children[0];
+  const childEditBtn = parentElement.children[2].children[1];
   childEditBtn.disabled = disabled;
+}
+
+const keepTask = (target) => {
+  const parentElement = target.parentElement.parentElement;
+  const id = Number(parentElement.id);
+  const childElementCheckbox = parentElement.children[0];
+  const childElementInputText = parentElement.children[1];
+  if (childElementInputText.value === '') {
+    alert('タスクを入力してください');
+    const beforeValue = todoList[id].content;
+    childElementInputText.value = beforeValue;
+    childElementInputText.focus();
+    return;
+  }
+
+  const editBtn = target.parentElement.children[1];
+  target.classList.remove('active');
+  editBtn.classList.add('active');
+
+
+  childElementCheckbox.classList.add('active');
+
+  const viewPTag = document.createElement('p');
+  viewPTag.setAttribute('class', 'card-item-p');
+  viewPTag.textContent = childElementInputText.value;
+  todoList[id].content = childElementInputText.value;
+
+  childElementInputText.replaceWith(viewPTag);
 }
 
 const editTaskView = (target) => {
@@ -117,6 +145,11 @@ const editTaskView = (target) => {
 const deleteTask = (target) => {
   const parentElement = target.parentElement.parentElement;
   const id = Number(parentElement.id);
+
+  const checkFlg = window.confirm('削除してもよろしいですか？');
+  if (!checkFlg) {
+    return;
+  }
   parentElement.remove();
 
   todoList = filterById(id);
@@ -126,7 +159,6 @@ const deleteTask = (target) => {
 }
 
 document.addEventListener('click', (event) => {
-  // checkboxのイベントさえも無効化してしまう、どうしようかな
   // event.preventDefault();
   const target = event.target;
 
@@ -138,6 +170,9 @@ document.addEventListener('click', (event) => {
     addTask()
   }
 
+  if (target.matches('#keep')) {
+    keepTask(target)
+  }
   if (target.matches('#edit')) {
     editTaskView(target)
   }
