@@ -52,10 +52,10 @@ const addTask = () => {
     newTaskContent.setAttribute('class', 'card-item-wrapper');
     newTaskContent.setAttribute('id', `${newTask.id}`);
     newTaskContent.innerHTML = `
-    <input id="checkbox" type="checkbox" class="card-item-checkbox" name="task-checkbox">
+    <input id="checkbox" type="checkbox" class="card-item-checkbox active" name="task-checkbox">
     <p class="card-item-p">${task}</p>
     <div class="card-item-btns">
-      <button class="edit" id="edit">編集</button><button class="del" id="del">削除</button>
+      <button class="keep" id="keep">保存</button><button class="edit active" id="edit">編集</button><button class="del" id="del">削除</button>
     </div>
     `;
     taskContent.appendChild(newTaskContent);
@@ -90,9 +90,28 @@ const changeCheckBox = (target) => {
   childEditBtn.disabled = disabled;
 }
 
-const editTask = (target) => {
-  console.log("edit")
-  console.log(target)
+const editTaskView = (target) => {
+
+  const keepBtn = target.parentElement.children[0];
+  target.classList.remove('active');
+  keepBtn.classList.add('active');
+
+  const parentElement = target.parentElement.parentElement;
+  const childElementCheckbox = parentElement.children[0];
+  const childElementPTag = parentElement.children[1];
+  const task = childElementPTag.textContent;
+
+  childElementCheckbox.classList.remove('active');
+
+  const editInput = document.createElement('input');
+  editInput.setAttribute('type', 'text');
+  editInput.setAttribute('value', task);
+  editInput.setAttribute('id', 'new-edit-input');
+  editInput.setAttribute('class', 'new-edit-input');
+  editInput.focus();
+
+  childElementPTag.replaceWith(editInput);
+
 }
 
 const deleteTask = (target) => {
@@ -120,7 +139,7 @@ document.addEventListener('click', (event) => {
   }
 
   if (target.matches('#edit')) {
-    editTask(target)
+    editTaskView(target)
   }
   if (target.matches('#del')) {
     deleteTask(target)
