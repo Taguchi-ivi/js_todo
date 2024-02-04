@@ -13,26 +13,23 @@
     <div class="card-title">
       <h1 class="title">Todo List 🚀</h1>
       <p class="sub-title">output vanilla js todo list</p>
-      <div class="wrapper-input">
-        <input class="input-text" type="text">
-        <button class="btn">保存</button>
-      </div>
+      <form>
+        <div class="wrapper-input">
+          <input id="input-todo" class="input-text" type="text">
+          <button id="submit" class="btn" type="button">保存</button>
+        </div>
+      </form>
     </div>
     <div class="card-item">
       <p class="card-item-header">
-        タスク数: <span>0</span> / 未着手数: <span>0</span> / 完了数: <span>0</span>
+        全てのタスク: <span id="task-count">0</span> / 
+        完了済み: <span id="task-comp-count">0</span> / 
+        未完了: <span id="task-not-start-count">0</span>
       </p>
-      <ul>
-        <li class="card-item-wrapper">
-          <input type="checkbox" class="card-item-checkbox" name="checkbox01" checked="checked">
-          <p class="card-item-p">テストテストテストテストテスト</p>
-          <div class="card-item-btns">
-            <button class="edit">編集</button><button class="del">削除</button>
-          </div>
-        </li>
+      <ul id="card-item-content">
       </ul>
     </div>
   </div>
-  <script src="./src/js/index.js"></script>
+  <script type="module" src="./src/js/index.js"></script>
 </body>
 </html>

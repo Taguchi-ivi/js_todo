@@ -54,6 +54,7 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     margin-bottom: 30px;
+
     .card-item-header {
       padding: 20px 20px 5px 20px;
       border-bottom: 1px solid #000;
@@ -62,9 +63,29 @@
     }
     ul {
       text-align: left;
+      .card-item-checkbox {
+        display: none;
+        &.active {
+          display: inline-block;
+        }
+      }
       p {
         margin: auto 0;
         padding-left: 10px;
+        text-decoration: none;
+        &.cancellation {
+          text-decoration: line-through;
+        }
+      }
+      .new-edit-input {
+        font-size: 16px;
+        margin: auto 8px;
+        padding-left: 3px;
+        border: none;
+        border-bottom: 1px solid blue;
+        &:focus {
+          outline: none;
+        }
       }
       .card-item-wrapper {
         display: flex;
@@ -78,15 +99,33 @@
             cursor: pointer;
             margin: 10px;
             border-radius: 10px;
+            &.keep {
+              background-color: #fff;
+              color: blue;
+              border: 1px solid blue;
+              display: none;
+              &.active {
+                display: inline-block;
+              }
+            }
             &.edit {
               background-color: #fff;
               color: green;
               border: 1px solid green;
+              display: none;
+              &.active {
+                display: inline-block;
+              }
             }
             &.del {
               background-color: #fff;
               color: red;
               border: 1px solid red;
+            }
+            &:disabled {
+              background-color: #ccc;
+              color: #fff;
+              border: 1px solid #ccc;
             }
           }
         }
